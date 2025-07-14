@@ -1,0 +1,50 @@
+package gift.controller;
+
+import gift.model.Product;
+import gift.repository.ProductDao;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RequestMapping("/api")
+@RestController
+public class ProductController {
+    private final ProductDao productDao;
+
+    public ProductController(ProductDao productDao) {
+        this.productDao = productDao;
+    }
+
+    @GetMapping("/products")
+    public List<Product> getAllProducts() {
+        return productDao.getAllProducts();
+    }
+
+    @GetMapping("/products/{id}")
+    public Product getProductById(@PathVariable int id) {return productDao.getProductById(id);}
+
+    @PostMapping("/products")
+    public void addProduct(@Valid @RequestBody Product product) {
+        if(!product.getName().contains("카카오")){
+            product.setMdApproved(true);
+        }
+        productDao.insertProduct(product);
+    }
+
+    @DeleteMapping("products/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productDao.removeProduct(id);
+    }
+
+    @PatchMapping("/products/{id}")
+    public void updateProduct(@Valid @PathVariable Long id, @RequestBody Product product) {
+        if(!product.getName().contains("카카오")){
+            product.setMdApproved(true);
+        }else{
+            product.setMdApproved(false);
+        }
+        productDao.updateProduct(id, productDao.getProductById(id), product);
+    }
+
+}
