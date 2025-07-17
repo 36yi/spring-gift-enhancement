@@ -4,7 +4,7 @@ CREATE TABLE product
     name  VARCHAR(255),
     price INT,
     image VARCHAR(255),
-    mdApproved BOOLEAN DEFAULT FALSE
+    mdapproved BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE users (
