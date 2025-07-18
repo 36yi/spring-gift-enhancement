@@ -1,10 +1,27 @@
 package gift.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
     private String userid;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String role;
+
+    protected User() {
+        // JPA 기본 생성자
+    }
 
     public Long getId() { return id; }
     public String getUserid() { return userid; }
