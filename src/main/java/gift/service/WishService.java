@@ -32,10 +32,7 @@ public class WishService {
         User user = userRepository.getReferenceById(userId);
         Product product = productRepository.getReferenceById(productId);
 
-        Wish wish = new Wish();
-        wish.setUser(user);
-        wish.setProduct(product);
-        wish.setCount(1L);
+        Wish wish = new Wish(user, product, 1L);
 
         wishDao.save(wish);
     }
