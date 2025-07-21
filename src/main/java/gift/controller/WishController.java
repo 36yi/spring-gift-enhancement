@@ -1,10 +1,15 @@
 package gift.controller;
 
+import gift.DTO.WishDTO;
 import gift.DTO.WishRequestDTO;
 import gift.annotation.LoginUser;
 import gift.model.User;
 import gift.model.Wish;
 import gift.service.WishService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,5 +42,21 @@ public class WishController {
     @PatchMapping("wish/dec")
     public void decrementWish(@RequestBody WishRequestDTO request, @LoginUser User user){
         wishService.decreaseWish(user.getId(), request.getProductid());
+    }
+    @GetMapping("/wish/paged")
+    public Page<WishDTO> getPagedWishList(
+            @LoginUser User user,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return wishService.getPagedWishList(user.getId(), pageable)
+                .map(WishDTO::new);
     }
 }

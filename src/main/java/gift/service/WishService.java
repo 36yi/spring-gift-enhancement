@@ -6,8 +6,9 @@ import gift.model.User;
 import gift.model.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
-import gift.repository.WishDao;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,4 +71,9 @@ public class WishService {
             wish.setCount(wish.getCount() - 1);
             wishDao.save(wish);
         }
-    }}
+    }
+    public Page<Wish> getPagedWishList(Long userId, Pageable pageable) {
+        User user = userRepository.getReferenceById(userId);
+        return wishDao.findAllByUser(user, pageable);
+    }
+}
