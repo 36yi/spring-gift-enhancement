@@ -20,7 +20,6 @@ public class User {
     private String role;
 
     protected User() {
-        // JPA 기본 생성자
     }
 
     public Long getId() { return id; }

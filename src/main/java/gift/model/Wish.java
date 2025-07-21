@@ -24,9 +24,14 @@ public class Wish {
     @Column(nullable = false)
     private Long count;
 
-    public Wish() {
+    protected Wish() {
     }
 
+    public Wish(User user, Product product, Long count) {
+        this.user = user;
+        this.product = product;
+        this.count = count;
+    }
     public Long getId() { return id; }
     public User getUser() { return user; }
     public Product getProduct() { return product; }
