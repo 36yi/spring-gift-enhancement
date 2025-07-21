@@ -24,7 +24,7 @@ public class Product {
     @Column(name = "mdApproved", nullable = false)
     private Boolean mdApproved = false;
 
-    public Product() {
+    protected Product() {
     }
 
     public Product(Long id, String name, Integer price, String imageUrl, Boolean mdApproved) {
