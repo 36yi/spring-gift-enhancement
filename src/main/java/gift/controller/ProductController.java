@@ -1,6 +1,11 @@
 package gift.controller;
 
+import gift.dto.ProductOptionDTO;
+import gift.dto.ProductOptionResponseDTO;
+import gift.dto.ProductRequestDTO;
 import gift.model.Product;
+import gift.model.ProductOption;
+import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -15,9 +20,11 @@ import java.util.List;
 @RestController
 public class ProductController {
     private final ProductRepository productDao;
+    private final ProductOptionRepository productOptionRepository;
 
-    public ProductController(ProductRepository productDao) {
+    public ProductController(ProductRepository productDao, ProductOptionRepository productOptionRepository) {
         this.productDao = productDao;
+        this.productOptionRepository = productOptionRepository;
     }
 
     @GetMapping("/products")
@@ -42,11 +49,30 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public void addProduct(@Valid @RequestBody Product product) {
-        if(!product.getName().contains("카카오")){
+    public void addProduct(@Valid @RequestBody ProductRequestDTO dto) {
+        Product product = new Product();
+        product.setName(dto.name());
+        product.setPrice(dto.price());
+        product.setImage(dto.image());
+
+        if (!dto.name().contains("카카오")) {
             product.setMdApproved(true);
         }
+
         productDao.save(product);
+
+        for (ProductOptionDTO optDto : dto.options()) {
+            ProductOption option = new ProductOption(product, optDto.name(), optDto.quantity());
+            productOptionRepository.save(option);
+        }
+    }
+
+    @GetMapping("/products/{productId}/options")
+    public List<ProductOptionResponseDTO> getOptions(@PathVariable Long productId) {
+        List<ProductOption> options = productOptionRepository.findByProductId(productId);
+        return options.stream()
+                .map(opt -> new ProductOptionResponseDTO(opt.getId(), opt.getName(), opt.getQuantity()))
+                .toList();
     }
 
     @DeleteMapping("products/{id}")

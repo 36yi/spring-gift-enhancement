@@ -79,4 +79,5 @@ public class AdminProductController {
         productDao.save(product);
         return "redirect:/admin/products";
     }
+
 }
