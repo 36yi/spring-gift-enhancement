@@ -39,10 +39,6 @@ public class ProductOption {
         return product;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public String getName() {
         return name;
     }
@@ -58,4 +54,17 @@ public class ProductOption {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+    public void decreaseQuantity(int amount) {
+        if (quantity < amount) {
+            throw new IllegalStateException("재고 부족: 현재 수량 = " + quantity);
+        }
+        this.quantity -= amount;
+    }
+    public void increaseQuantity(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("증가 수량은 음수일 수 없습니다.");
+        }
+        this.quantity += amount;
+    }
+
 }

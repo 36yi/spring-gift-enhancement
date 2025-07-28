@@ -17,8 +17,8 @@ public class ProductOptionService {
         ProductOption option = productOptionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 옵션이 존재하지 않습니다."));
 
-        option.setQuantity(option.getQuantity() + amount);
-        productOptionRepository.save(option); // flush 시 update 발생
+        option.increaseQuantity(amount);
+        productOptionRepository.save(option);
     }
 
     public void decreaseQuantity(Long id, int amount) {
@@ -29,7 +29,7 @@ public class ProductOptionService {
             throw new IllegalStateException("재고 부족: 현재 수량 = " + option.getQuantity());
         }
 
-        option.setQuantity(option.getQuantity() - amount);
+        option.decreaseQuantity(amount);
         productOptionRepository.save(option);
     }
 }
